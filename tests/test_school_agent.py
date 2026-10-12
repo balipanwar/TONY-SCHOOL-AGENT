@@ -96,9 +96,34 @@ class TestAnswerQuestion:
         response = answer_question("   ")
         assert "Please ask a question" in response
 
-    def test_unknown_category(self):
-        response = answer_question("xyz abc 123 xyz")
-        assert "timings" in response or "fees" in response or "can answer" in response
+    def test_unknown_category_xyz_abc_def(self):
+        """Regression: xyz abc def should trigger unsupported-question response."""
+        response = answer_question("xyz abc def")
+        # Should NOT say "not been provided" - should say it can answer about known topics
+        assert "not been provided" not in response.lower()
+        assert "can answer" in response.lower()
+
+    def test_timing_question_with_null_data(self):
+        """Regression: 'school timing kya hai?' should work and report missing data."""
+        response = answer_question("school timing kya hai?")
+        # Should either have data or clearly say it's not provided
+        assert response is not None and len(response) > 0
+        # With null data in JSON, should say not provided
+        assert "not been provided" in response.lower() or "information" in response.lower()
+
+    def test_fees_question_with_null_data(self):
+        """Regression: 'fees kitni hai?' should work and report missing data."""
+        response = answer_question("fees kitni hai?")
+        assert response is not None and len(response) > 0
+        # With null data in JSON, should say not provided
+        assert "not been provided" in response.lower() or "information" in response.lower()
+
+    def test_typo_timetable_question(self):
+        """Regression: 'taim tebal kya he' should match timetable and report missing data."""
+        response = answer_question("taim tebal kya he")
+        assert response is not None and len(response) > 0
+        # Typo tolerance should still match timetable, and with null data say it's not provided
+        assert "not been provided" in response.lower() or "information" in response.lower()
 
     def test_category_with_no_data(self):
         """Test that missing data returns clear message."""
