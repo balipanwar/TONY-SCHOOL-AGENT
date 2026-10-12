@@ -58,6 +58,11 @@ KEYWORD_MAP = {
         "class schedule",
         "daily schedule",
         "din ka timing",
+        # Common Hindi/Hinglish misspellings and variants
+        "taim tebal",
+        "taim table",
+        "time tebal",
+        "tiem table",
     ],
     "admissions": [
         "admission",
@@ -135,9 +140,12 @@ def find_best_category(question):
     """Find the best matching category for a question using typo-tolerant matching.
     
     Strategy:
-    1. Exact substring match → score 1.0
+    1. Exact substring match → score 1.0 (highest priority)
     2. Fuzzy match with high threshold (0.70+) → score from SequenceMatcher
     3. Otherwise → None (reject unknown questions)
+    
+    Common misspellings are added directly to KEYWORD_MAP to ensure exact matches.
+    This prevents false positives while supporting real-world typos.
     """
     normalized_question = normalize_text(question)
     if not normalized_question:
@@ -165,6 +173,7 @@ def find_best_category(question):
 
     # Require a high similarity threshold to accept a match
     # This prevents random words like "xyz abc def" from matching
+    # Exact substring matches (score 1.0) always pass
     if best_score < 0.65:
         return None
 
