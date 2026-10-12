@@ -1,0 +1,34 @@
+{
+  "school_name": "TONY School",
+  "timings": {
+    "opening_time": null,
+    "closing_time": null,
+    "working_days": null
+  },
+  "fees": {
+    "tuition_fee": null,
+    "admission_fee": null,
+    "note": null
+  },
+  "timetable": {
+    "monday": null,
+    "description": null
+  },
+  "admissions": {
+    "process": null,
+    "documents": [],
+    "contact_for_admissions": null
+  },
+  "holidays": {
+    "summer_break": null,
+    "independence_day": null,
+    "winter_break": null,
+    "note": null
+  },
+  "contact": {
+    "phone": null,
+    "email": null,
+    "address": null,
+    "office_hours": null
+  }
+}
