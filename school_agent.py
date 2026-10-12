@@ -132,7 +132,13 @@ def normalize_text(text):
 
 
 def find_best_category(question):
-    """Find the best matching category for a question using typo-tolerant matching."""
+    """Find the best matching category for a question using typo-tolerant matching.
+    
+    Strategy:
+    1. Exact substring match → score 1.0
+    2. Fuzzy match with high threshold (0.70+) → score from SequenceMatcher
+    3. Otherwise → None (reject unknown questions)
+    """
     normalized_question = normalize_text(question)
     if not normalized_question:
         return None
@@ -157,8 +163,9 @@ def find_best_category(question):
                 best_category = category
                 best_score = score
 
-    # Require minimum score threshold
-    if best_score < 0.35:
+    # Require a high similarity threshold to accept a match
+    # This prevents random words like "xyz abc def" from matching
+    if best_score < 0.65:
         return None
 
     return best_category
